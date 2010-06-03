@@ -1,0 +1,101 @@
+var APP_TITLE = "Java CMD Generator";
+var APP_VERSION = " v1.0";
+/*
+*	@doc
+*	在当前目录下创建 java.cmd 和 javac.cmd
+*	Generate java.cmd & javac.cmd for Current Dir
+*
+*	【使用】: cscript java-cmd-gen.js //Nologo //E:JScript [cmd_file] [exe_file] [exe_params...]
+*	【说明】:
+*		cmd_file 当前目录命令名
+*		exe_file Java目录的映射命令名
+*		exe_params 传递的参数
+*	【示例】:
+*	1.直接在当前目录下生成 java.cmd 和 javac.cmd
+*	cscript java-cmd-gen.js //Nologo //E:JScript
+*	2.在当前目录下生成 javac.cmd,并设定参数 -classpath F:\java\jar\log4j-1.2.16.jar;
+*	cscript java-cmd-gen.js //Nologo //E:JScript javac javac.exe -classpath F:\java\jar\log4j-1.2.16.jar;
+*
+*	@events:
+*		onDocUpdated(): 更新showHelp(), 通过@doc正则替换 \n 为 ");\nWScript.Echo("
+*	@author:	kmlxk@yahoo.com.cn
+*	@created:	2010-6-2 14:28
+*
+*	@modified:	
+*		0. 
+*
+*	@comment:
+*		1. 用于扩展EditPlus中的工具
+*		2. 通过set /p的cmd脚本，以支持classpath设置
+*		3. 文件在当前路径下生成
+*		4. JDK路径在变量 JDK6_JAVA_BIN 中设置
+*
+*	@todo:
+*		更多的参数支持
+*/
+
+var JDK6_JAVA_BIN = "\"F:\\Program Files\\Genuitec\\Common\\binary\\com.sun.java.jdk.win32.x86_1.6.0.013\\bin\\BIN_FILE\""
+var WshShell = WScript.CreateObject ("WScript.Shell");
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+var curDir = WshShell.CurrentDirectory;
+if (curDir.substr(curDir.length,1)!="\\")
+	curDir+="\\";
+
+function showHelp()
+{
+WScript.Echo("在当前目录下创建 java.cmd 和 javac.cmd");
+WScript.Echo("Generate java.cmd & javac.cmd for Current Dir");
+WScript.Echo("使用: cscript java-cmd-gen.js //Nologo //E:JScript [cmd_file] [exe_file] [exe_params...]");
+WScript.Echo("说明:");
+WScript.Echo("	cmd_file 当前目录命令名");
+WScript.Echo("	exe_file Java目录的映射命令名");
+WScript.Echo("	exe_params 传递的参数");
+WScript.Echo("示例:");
+WScript.Echo("1.直接在当前目录下生成 java.cmd 和 javac.cmd");
+WScript.Echo("cscript java-cmd-gen.js //Nologo //E:JScript");
+WScript.Echo("2.在当前目录下生成 javac.cmd,并设定参数 -classpath F:\java\jar\log4j-1.2.16.jar;");
+WScript.Echo("cscript java-cmd-gen.js //Nologo //E:JScript javac javac.exe -classpath F:\java\jar\log4j-1.2.16.jar;");
+}
+
+function main()
+{
+	WScript.Echo(APP_TITLE + APP_VERSION);
+	
+	var sParam = "";
+	var objArgs = WScript.Arguments;
+	if (objArgs.length == 0)
+	{
+		writeFile(curDir+"javac.cmd", JDK6_JAVA_BIN.replace("BIN_FILE", 'javac.exe')+" %*");
+		writeFile(curDir+"java.cmd", JDK6_JAVA_BIN.replace("BIN_FILE", 'java.exe')+" %*");
+		return;
+	}
+	else if (objArgs.length == 1)
+	{
+		if (objArgs(0)=="/h")
+		{
+			showHelp();
+			return;
+		}
+	}
+	else if (objArgs.length >= 2)
+	{
+		for (i = 2; i < objArgs.length; i++)
+		{
+			sParam = sParam+" "+objArgs(i);
+		}
+
+		writeFile(curDir + objArgs(0) + ".cmd", JDK6_JAVA_BIN.replace("BIN_FILE", objArgs(1)) + sParam + " %*");
+	}
+
+}
+
+function writeFile(filename, content)
+{
+	WScript.Echo("writeFile: "+filename);
+	file = fso.CreateTextFile(filename, true);
+	file.WriteLine(content);
+	file.Close();
+}
+
+main();

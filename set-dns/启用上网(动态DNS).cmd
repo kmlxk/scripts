@@ -1,0 +1,1 @@
+netsh interface ip set dns name="本地连接" source=dhcp register=PRIMARY

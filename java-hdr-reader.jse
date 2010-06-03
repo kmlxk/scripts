@@ -1,0 +1,125 @@
+var APP_TITLE = "Java Header Reader";
+var APP_VERSION = " v1.0";
+/*
+*	@doc
+*	读取Java文件头部的@Package、@BuildParameter及@RunParameter参数
+*
+*	【使用】: cscript java-hdr-reader.js //Nologo //E:JScript [java_file]
+*	【说明】:
+*		java_file Java文件名
+*	【示例】:
+*	1.读取Log4jTest.java的头部参数
+*	cscript java-cmd-gen.js //Nologo //E:JScript Log4jTest.java
+*	【说明】:
+*		1. 头部通过@Define var=value 支持变量替换
+*
+*	@events:
+*		onDocUpdated(): 更新showHelp(), 通过@doc正则替换 \n 为 ");\nWScript.Echo("
+*	@author:	kmlxk@yahoo.com.cn
+*	@created:	2010-6-2 15:48
+*
+*	@modified:	
+*		0. 
+*
+*	@comment:
+*		1. 用于扩展EditPlus中的工具
+*
+*	@todo:
+*		0.
+*/
+
+var TOKEN_BUILD_PARAM = "@BuildParameter";
+var TOKEN_CLASS_PARAM = "@RunParameter";
+var TOKEN_PACKAGE = "@Package";
+var TOKEN_DEFINE = "@Define";
+
+var ForReading = 1, ForWriting = 2;
+var WshShell = WScript.CreateObject ("WScript.Shell");
+var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+var curDir = WshShell.CurrentDirectory;
+if (curDir.substr(curDir.length,1)!="\\")
+	curDir+="\\";
+
+function showHelp()
+{
+WScript.Echo(APP_TITLE + APP_VERSION);
+WScript.Echo("读取Java文件头部的@Package、@BuildParameter及@RunParameter参数");
+WScript.Echo("*");
+WScript.Echo("【使用】: cscript java-hdr-reader.js //Nologo //E:JScript [java_file]");
+WScript.Echo("【说明】:");
+WScript.Echo("	java_file Java文件名");
+WScript.Echo("【示例】:");
+WScript.Echo("1.读取Log4jTest.java的头部参数");
+WScript.Echo("cscript java-cmd-gen.js //Nologo //E:JScript Log4jTest.java");
+WScript.Echo("【说明】:");
+WScript.Echo("	1. 头部通过@Define var=value 支持变量替换");
+}
+
+function main()
+{
+	var objArgs = WScript.Arguments;
+	if (objArgs.length == 0)
+	{
+		showHelp();
+		return;
+	}
+	else if (objArgs.length == 1)
+	{
+		if (objArgs(0)=="/h")
+		{
+			showHelp();
+			return;
+		}
+
+		var sBuildParameter = null, sRunParameter = null, sPackage = null;
+		var objVars = Array();
+		var streamIn = null, sLine = null;
+
+		streamIn = fso.OpenTextFile(objArgs(0), ForReading);
+		while (!streamIn.AtEndOfStream)
+		{
+			sLine =  streamIn.ReadLine();
+			if (sLine.substr(0, TOKEN_BUILD_PARAM.length)==TOKEN_BUILD_PARAM)
+			{
+				sBuildParameter = sLine.substr(TOKEN_BUILD_PARAM.length + 1, sLine.length - TOKEN_BUILD_PARAM.length);
+				for ( i = 0 ; i < objVars.length ; i++)
+				{
+					sBuildParameter = sBuildParameter.replace(objVars[i].key, objVars[i].value);
+				}
+			}
+			else if (sLine.substr(0, TOKEN_CLASS_PARAM.length)==TOKEN_CLASS_PARAM)
+			{
+				sRunParameter = sLine.substr(TOKEN_CLASS_PARAM.length + 1, sLine.length - TOKEN_CLASS_PARAM.length);
+				for ( i = 0 ; i < objVars.length ; i++)
+				{
+					sRunParameter = sRunParameter.replace(objVars[i].key, objVars[i].value);
+				}
+			}
+			else if (sLine.substr(0, TOKEN_PACKAGE.length)==TOKEN_PACKAGE)
+			{
+				sPackage = sLine.substr(TOKEN_PACKAGE.length + 1, sLine.length - TOKEN_PACKAGE.length);
+			}
+			else if (sLine.substr(0, TOKEN_DEFINE.length)==TOKEN_DEFINE)
+			{
+				var sVarDefine = sLine.substr(TOKEN_DEFINE.length + 1, sLine.length - TOKEN_DEFINE.length);
+				var pos = sVarDefine.indexOf("=");
+				var key = sVarDefine.substr(0, pos);
+				var value = sVarDefine.substr(pos+1, sVarDefine.length - pos);
+				//WScript.Echo("\tDEFINE "+key+":"+value);
+				objVars.push({'key':key, 'value':value});
+			}
+		}
+		streamIn.Close();
+
+		//WScript.Echo(sPackage);
+		WScript.Echo(sBuildParameter);
+		WScript.Echo(sRunParameter);
+
+	}
+	
+
+}
+
+
+main();

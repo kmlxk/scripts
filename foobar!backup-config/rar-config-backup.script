@@ -1,0 +1,7 @@
+Path=%APPDATA%\foobar2000
+Overwrite=1
+Delete=*.*
+Title=foobar2000 Restore System
+Text{
+还原foobar2000的整个Profile(含设定、界面、歌曲列表、媒体库)
+}

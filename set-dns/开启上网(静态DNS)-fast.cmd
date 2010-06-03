@@ -1,0 +1,1 @@
+netsh -f netsh!edu-dns.cfg

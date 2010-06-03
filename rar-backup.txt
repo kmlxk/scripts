@@ -1,0 +1,13 @@
+;rar script
+;~~~~~~~~~~~~
+Path=%APPDATA%\foobar2000
+Overwrite=1
+Delete=*.*
+Title=foobar2000 Restore System
+Text{
+还原foobar2000的整个Profile(含设定、界面、歌曲列表、媒体库)
+}
+;shortcut
+;~~~~~~~~~~~~
+;cmd: "C:\Program Files\WinRAR\WinRAR.exe" a -m5 -s -u -as -r -ep1 -x*.exe -sfx "F:\Program Files\foobar2000\还原配置.exe" c -z"F:\Program Files\foobar2000\rarbackupcmd.txt" dummy "%APPDATA%\foobar2000\*.*"
+;path: "C:\Program Files\WinRAR"

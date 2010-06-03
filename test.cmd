@@ -1,0 +1,1 @@
+cscript.exe K:\scripts\get-filename-without-ext.jse //Nologo //E:JScript | prompt-cmd.cmd

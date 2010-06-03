@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> new document </title>
+<meta name="generator" content="editplus" />
+<meta name="author" content="" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+</head>
+
+<body>
+<script type="text/javascript">
+<!--
+	Stu.count = 0;
+	function Stu( name, age )
+	{
+		this.sex = 0;
+		this.name = name;
+		this.age = age;
+		Stu.count++;
+		this.toString = function(){
+			return Stu.count + ': ' + this.name + ', ' + this.getGender() + ', ' + this.age;
+		};
+		this.getGender = function(){
+			return this.sex == 1 ? 'male' : 'female';
+		};
+	}
+	var stu = new Stu('miss', 25);
+	alert(stu.toString());
+
+	var stu2 = new Stu('mr', 30);
+	alert(stu2.toString());
+	//alert(stu.toString());
+//-->
+</script>
+</body>
+</html>
