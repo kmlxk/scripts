@@ -1,0 +1,16 @@
+/*
+* 调用其他的程序
+* 使用方法: cscript exec.jse //Nologo //E:JScript notepad.exe
+*/
+
+var oShell = WScript.CreateObject ("WScript.Shell");
+var objArgs = WScript.Arguments;
+if (objArgs.length > 0) {
+	var args = [];
+	for (var i = 0; i < objArgs.length ; i++) {
+		args.push(objArgs(i));
+	}
+	var sPath = args.join(' ');
+	WScript.Echo(sPath);
+	var oExec = oShell.Run(sPath);
+}

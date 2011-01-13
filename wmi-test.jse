@@ -1,0 +1,20 @@
+/*
+* 调用其他的程序
+* 使用方法: cscript exec.jse //Nologo //E:JScript notepad.exe
+*/
+
+function dump(data) {
+	var ar = [],
+		k = null;
+	ar.push('['+typeof(data)+'] = "'+data+'";');
+	for ( k in data) {
+		ar.push('.'+k+' = '+data[k]);
+	}
+	return ar.join('\n');
+}
+
+var objSWbemServices = GetObject("winmgmts:");
+var colSWbemObjectSet = objSWbemServices.InstancesOf("Win32_LogicalDisk");
+
+for(var objDisk in colSWbemObjectSet)
+    Wscript.Echo(objDisk.DeviceID);

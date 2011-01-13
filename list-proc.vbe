@@ -1,0 +1,11 @@
+
+strComputer = "."
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set wbemServices = GetObject("winmgmts:\\" & strComputer)
+
+Set wbemObjectSet = wbemServices.InstancesOf("Win32_Process")
+
+For Each wbemObject In wbemObjectSet
+	strName = wbemObject.Name
+	wscript.echo strName
+Next
