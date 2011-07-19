@@ -1,10 +1,10 @@
-var APP_TITLE = "get-filename.jse";
+var APP_TITLE = "get-filename-without-ext.jse";
 var APP_VERSION = " v1.0";
 /*
 *	@doc
 *	获取给定参数的文件名
 *
-*	【使用】: cscript get-filename.jse //Nologo //E:JScript [filename]
+*	【使用】: cscript get-filename-without-ext.jse //Nologo //E:JScript [filename]
 *	【说明】:
 *	【示例】:
 *
@@ -23,7 +23,7 @@ var APP_VERSION = " v1.0";
 *		0.
 */
 
-var WshShell = WScript.CreateObject("WScript.Shell");
+var WshShell = WScript.CreateObject ("WScript.Shell");
 
 var curDir = WshShell.CurrentDirectory;
 if (curDir.substr(curDir.length,1)!="\\")
@@ -31,7 +31,7 @@ if (curDir.substr(curDir.length,1)!="\\")
 
 function showHelp()
 {
-	WScript.Echo(APP_TITLE + APP_VERSION);
+WScript.Echo(APP_TITLE + APP_VERSION);
 }
 
 function main()
@@ -56,6 +56,11 @@ function main()
 		if (pos > 0)
 		{
 			filename = filename.substr(pos+1);
+		}
+		pos = filename.lastIndexOf(".");
+		if (pos > 0)
+		{
+			filename = filename.substr(0, pos);
 		}
 		WScript.Echo(filename);
 	}

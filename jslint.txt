@@ -1,0 +1,9 @@
+参数："$(FilePath)"
+命令：WScript.exe "D:\editPlus\app\JSLint\JSLint.wsf"
+注意将JSLint.wsf路径替换成你自己的
+输出模式中的正则表达式栏：
+^.+ >>>in \[(.+)\] \[line\: ([0-9]+)\,character\: ([0-9]+)\]
+
+然后设定一个快捷键~
+JSLint检查完后双击错误信息，就会自动将光标定位到出错行。
+

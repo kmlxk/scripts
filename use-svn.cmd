@@ -1,0 +1,1 @@
+set path=%path%;F:\Program Files\Subversion\bin
