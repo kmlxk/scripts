@@ -1,0 +1,1 @@
+set path=%path%;F:\java\apps\apache-maven-2.2.1\bin

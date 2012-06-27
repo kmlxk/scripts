@@ -1,0 +1,108 @@
+var APP_TITLE = "Convert to Eclipse Project";
+var APP_VERSION = "v1.0";
+/*
+*	@doc
+*	获取给定参数的文件名
+*
+*	【使用】: cscript jad&open.jse //Nologo //E:JScript [filename]
+*	【说明】:
+*	【示例】:
+*
+*	@events:
+*		onDocUpdated(): 更新showHelp(), 通过@doc正则替换 \\n 为 ");\\nWScript.Echo("
+*	@author:	kmlxk@yahoo.com.cn
+*	@created:	2010-6-3 12:32
+*
+*	@modified:	
+*		0. 
+*
+*	@comment:
+*		0. 
+*
+*	@todo:
+*		0.
+*/
+
+var WshShell = WScript.CreateObject ("WScript.Shell");
+
+function print(msg) {
+	WScript.Echo(msg);
+}
+
+var Util = {
+	getBeforeReverse: function(str, find) {
+		var pos = str.lastIndexOf(find);
+		if (pos > 0) {
+			str = str.substr(0, pos);
+		}
+		return str;
+	},
+	getAfterReverse: function(str, find) {
+		var pos = str.lastIndexOf(find);
+		if (pos > 0) {
+			str = str.substr(pos+1);
+		}
+		return str;
+	}
+
+}
+
+var FileSystem = {
+	stripPath: function(path) {
+		return Util.getAfterReverse(path, "\\");
+	},
+	getPath: function(path) {
+		return Util.getBeforeReverse(path, "\\");
+	},
+	stripExt: function(path) {
+		return Util.getBeforeReverse(path, ".");
+	}, 
+	getExt: function(path) {
+		return Util.getAfterReverse(path, ".");
+	}
+}
+
+function getFilenameWithoutExt(filename) {
+	var pos = filename.lastIndexOf("\\\\");
+	if (pos > 0) {
+		filename = filename.substr(pos+1);
+	}
+	pos = filename.lastIndexOf(".");
+	if (pos > 0) {
+		filename = filename.substr(0, pos);
+	}
+	return filename;
+}
+
+var curDir = WshShell.CurrentDirectory;
+if (curDir.substr(curDir.length,1)!="\\\\") {
+	curDir+="\\\\";
+}
+
+function App() {
+	this.Title = APP_TITLE;
+	this.Version = APP_VERSION;
+}
+App.prototype.printHelp = function() {
+	print(this.Title + " " + this.Version);
+}
+App.prototype.run = function() {
+	var sParam = "";
+	var objArgs = WScript.Arguments;
+	if (objArgs.length == 0) {
+		this.printHelp();
+		return;
+	}
+	else if (objArgs.length == 1) {
+		if (objArgs(0)=="/h") {
+			this.printHelp();
+			return;
+		}
+		var projectName = objArgs(0);
+		var projectFile = '<?xml version="1.0" encoding="UTF-8"?>\n<projectDescription>\n\t<name>'+projectName+'</name>\n\t<comment></comment>\n\t<projects>\n\t</projects>\n\t<buildSpec>\n\t\t<buildCommand>\n\t\t\t<name>org.eclipse.wst.validation.validationbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t\t<buildCommand>\n\t\t\t<name>org.eclipse.dltk.core.scriptbuilder</name>\n\t\t\t<arguments>\n\t\t\t</arguments>\n\t\t</buildCommand>\n\t</buildSpec>\n\t<natures>\n\t\t<nature>org.eclipse.php.core.PHPNature</nature>\n\t</natures>\n</projectDescription>\n';
+		print(projectFile);
+	}
+}
+
+var app = new App();
+app.run();
